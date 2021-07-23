@@ -1,108 +1,138 @@
 package com.example.merchantx.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.Observer;
 
 import android.view.LayoutInflater;
+
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.merchantx.R;
 import com.example.merchantx.base.BaseFragment;
+import com.example.merchantx.base.Constants;
 import com.example.merchantx.retrofit.bady.GenerateQRBody;
-import com.example.merchantx.retrofit.bady.SendSmsBody;
 import com.example.merchantx.retrofit.response.GenerateQRResponse;
-import com.example.merchantx.retrofit.response.SendSmsResponse;
 import com.example.merchantx.view_models.GenerateQRViewModel;
-import com.example.merchantx.view_models.SendSmsViewModel;
 
 public class MainFragment extends BaseFragment implements View.OnClickListener {
 
     private EditText etMoney;
     private EditText etComment;
-    private Button btnPay;
-    private Button btnQRGenerate;
-    private ProgressBar progressBar;
+    private CardView cvShare;
+    private CardView cvQRGenerate;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         etMoney = view.findViewById(R.id.et_money);
         etComment = view.findViewById(R.id.et_comment);
-        btnPay = view.findViewById(R.id.btn_pay);
-        btnQRGenerate = view.findViewById(R.id.btn_qr_generate);
-        btnPay.setOnClickListener(this);
-        btnQRGenerate.setOnClickListener(this);
+        cvShare = view.findViewById(R.id.cv_share);
+        cvQRGenerate = view.findViewById(R.id.cv_generate_qr);
+        cvShare.setOnClickListener(this);
+        cvQRGenerate.setOnClickListener(this);
 
         return view;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
+        if (etMoney.getText().toString().length() != 0) {
 
-        switch (v.getId()){
-            case R.id.btn_pay:
-                SendSmsViewModel sendSmsViewModel = new SendSmsViewModel();
-                SendSmsBody sendSmsBody = new SendSmsBody();
-                sendSmsBody.setMerchantId();
-                sendSmsBody.setTransactionId();
-                sendSmsBody.setPhone();
-                sendSmsViewModel.searchSendSms(sendSmsBody);
-                sendSmsViewModel.getSendSmsResponseMutableLiveData().observe(getViewLifecycleOwner(), new Observer<SendSmsResponse>() {
-                    @Override
-                    public void onChanged(SendSmsResponse sendSmsResponse) {
-                        changeFragment(R.id.fl_fragment_container, new ShareFragment());
+            switch (v.getId()) {
+                case R.id.cv_share:
+                    cvShare.setEnabled(false);
+                    cvQRGenerate.setEnabled(false);
+                    getLoader();
+                    if (etMoney.getText().toString().length() > 0) {
+                        GenerateQRViewModel model = new GenerateQRViewModel();
+                        GenerateQRBody body = new GenerateQRBody();
+                        body.setAmount(Integer.valueOf(etMoney.getText().toString()));
+                        body.setComment(etComment.getText().toString());
+                        body.setIsMulti(false);
+                        body.setMerchantId(Constants.MERCHANT_ID);
+                        model.searchGenerateQR(body);
+                        model.getGenerateResponseMutableLiveData().observe(getViewLifecycleOwner(), new Observer<GenerateQRResponse>() {
+                            @Override
+                            public void onChanged(GenerateQRResponse generateQRResponse) {
+                                changeFragment(R.id.fl_fragment_container, new ShareFragment(generateQRResponse.getId(), generateQRResponse.getPayXUrl()));
+                                closeLoader(cvShare);
+                                cvQRGenerate.setEnabled(true);
+                            }
+                        });
+                        model.getFailLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+                            @Override
+                            public void onChanged(String s) {
+                                closeLoader(cvShare);
+                                cvQRGenerate.setEnabled(true);
+                                Toast.makeText(getContext(), "Fail", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        model.getErrorLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+                            @Override
+                            public void onChanged(String s) {
+                                closeLoader(cvShare);
+                                cvQRGenerate.setEnabled(true);
+                                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
-                });
-                sendSmsViewModel.getFailLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
-                    @Override
-                    public void onChanged(String s) {
-                        Toast.makeText(getContext(), "Fail", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                sendSmsViewModel.getErrorLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
-                    @Override
-                    public void onChanged(String s) {
-                        Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                break;
+                    break;
 
-            case R.id.btn_qr_generate:
-                GenerateQRViewModel generateQRViewModel = new GenerateQRViewModel();
-                GenerateQRBody generateQRBody = new GenerateQRBody();
-                generateQRBody.setAmount(Integer.valueOf(etMoney.getText().toString()));
-                generateQRBody.setComment(etComment.getText().toString());
-                generateQRBody.setIsMulti();
-                generateQRBody.setMerchantId();
-                generateQRViewModel.searchGenerateQR(generateQRBody);
-                generateQRViewModel.getGenerateResponseMutableLiveData().observe(getViewLifecycleOwner(), new Observer<GenerateQRResponse>() {
-                    @Override
-                    public void onChanged(GenerateQRResponse generateQRResponse) {
-                        changeFragment(R.id.fl_fragment_container, new QRGenerateFragment());
+                case R.id.cv_generate_qr:
+
+                    cvShare.setEnabled(false);
+                    cvQRGenerate.setEnabled(false);                    getLoader();
+                    if (etMoney.getText().toString().length() > 0) {
+                        GenerateQRViewModel generateQRViewModel = new GenerateQRViewModel();
+                        GenerateQRBody generateQRBody = new GenerateQRBody();
+                        generateQRBody.setAmount(Integer.valueOf(etMoney.getText().toString()));
+                        generateQRBody.setComment(etComment.getText().toString());
+                        generateQRBody.setIsMulti(false);
+                        generateQRBody.setMerchantId(Constants.MERCHANT_ID);
+                        generateQRViewModel.searchGenerateQR(generateQRBody);
+                        generateQRViewModel.getGenerateResponseMutableLiveData().observe(getViewLifecycleOwner(), new Observer<GenerateQRResponse>() {
+                            @Override
+                            public void onChanged(GenerateQRResponse generateQRResponse) {
+                                changeFragment(R.id.fl_fragment_container, new QRGenerateFragment(generateQRResponse.getCode()));
+                                cvShare.setEnabled(true);
+                                closeLoader(cvQRGenerate);
+                            }
+                        });
+                        generateQRViewModel.getFailLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+                            @Override
+                            public void onChanged(String s) {
+                                Toast.makeText(getContext(), "Fail", Toast.LENGTH_SHORT).show();
+                                cvShare.setEnabled(true);
+                                closeLoader(cvQRGenerate);
+                            }
+                        });
+                        generateQRViewModel.getErrorLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+                            @Override
+                            public void onChanged(String s) {
+                                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                                cvShare.setEnabled(true);
+                                closeLoader(cvQRGenerate);
+                            }
+                        });
                     }
-                });
-                generateQRViewModel.getFailLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
-                    @Override
-                    public void onChanged(String s) {
-                        Toast.makeText(getContext(), "Fail", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                generateQRViewModel.getErrorLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
-                    @Override
-                    public void onChanged(String s) {
-                        Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                break;
+                    break;
+            }
+        } else {
+            Toast.makeText(getContext(), "Pleas input amount", Toast.LENGTH_SHORT).show();
         }
 
+
     }
+
+
 }

@@ -4,14 +4,15 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.merchantx.repository.GetTransactionNotPaidRepository;
-import com.example.merchantx.repository.GetTransactionOnlyPaidRepository;
 import com.example.merchantx.retrofit.response.GetTransactionNotPaidResponse;
-import com.example.merchantx.retrofit.response.GetTransactionOnlyPaidResponse;
+import com.example.merchantx.retrofit.response.get_paid_response.GetTransactionsResponse;
+
+import java.util.List;
 
 
 public class GetTransactionNotPaidViewModel extends ViewModel {
     private GetTransactionNotPaidRepository getTransactionNotPaidRepository;
-    private MutableLiveData<GetTransactionNotPaidResponse> getTransactionNotPaidResponseMutableLiveData;
+    private MutableLiveData<List<GetTransactionsResponse>> getTransactionNotPaidResponseMutableLiveData;
     private MutableLiveData<String> failLiveData;
     private MutableLiveData<String> errorLiveData;
 
@@ -23,7 +24,7 @@ public class GetTransactionNotPaidViewModel extends ViewModel {
     }
 
 
-    public MutableLiveData<GetTransactionNotPaidResponse> getGetTransactionNotPaidResponseMutableLiveData() {
+    public MutableLiveData<List<GetTransactionsResponse>> getGetTransactionNotPaidResponseMutableLiveData() {
         return getTransactionNotPaidResponseMutableLiveData;
     }
 

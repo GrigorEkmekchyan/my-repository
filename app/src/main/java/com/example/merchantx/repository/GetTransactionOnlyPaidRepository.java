@@ -2,15 +2,14 @@ package com.example.merchantx.repository;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.merchantx.retrofit.bady.SendSmsBody;
 import com.example.merchantx.retrofit.manager.GetTransactionOnlyPaidManager;
-import com.example.merchantx.retrofit.manager.SendSmsManager;
-import com.example.merchantx.retrofit.response.GetTransactionOnlyPaidResponse;
-import com.example.merchantx.retrofit.response.SendSmsResponse;
+import com.example.merchantx.retrofit.response.get_paid_response.GetTransactionsResponse;
+
+import java.util.List;
 
 
 public class GetTransactionOnlyPaidRepository implements GetTransactionOnlyPaidManager.OnGetTransactionOnlyPaidSearchListener {
-    private MutableLiveData<GetTransactionOnlyPaidResponse> liveData = new MutableLiveData();
+    private MutableLiveData<List<GetTransactionsResponse>> liveData = new MutableLiveData();
     private MutableLiveData<String> failLiveData = new MutableLiveData<>();
     private MutableLiveData<String> errorLiveData = new MutableLiveData<>();
 
@@ -19,8 +18,8 @@ public class GetTransactionOnlyPaidRepository implements GetTransactionOnlyPaidM
     }
 
     @Override
-    public void onGetTransactionOnlyPaidSearchSuccess(GetTransactionOnlyPaidResponse getTransactionOnlyPaidResponse) {
-        liveData.setValue(getTransactionOnlyPaidResponse);
+    public void onGetTransactionOnlyPaidSearchSuccess(List<GetTransactionsResponse> getTransactionsResponse) {
+        liveData.setValue(getTransactionsResponse);
     }
 
     @Override
@@ -33,7 +32,7 @@ public class GetTransactionOnlyPaidRepository implements GetTransactionOnlyPaidM
 
     }
 
-    public MutableLiveData<GetTransactionOnlyPaidResponse> getLiveData() {
+    public MutableLiveData<List<GetTransactionsResponse>> getLiveData() {
         return liveData;
     }
 

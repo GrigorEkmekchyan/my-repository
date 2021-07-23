@@ -23,8 +23,9 @@ import static com.example.merchantx.base.Constants.TOKEN;
 public class RetrofitClient {
 
     private static com.example.merchantx.servises.RetrofitClient instance;
-    private static final String BASE_URL = "http://suren077-001-site1.ctempurl.com/";
+    private static final String BASE_URL = "https://pms.payx.am/";
     private RetrofitApiService apiCall;
+
     private RetrofitClient() {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
@@ -32,13 +33,12 @@ public class RetrofitClient {
             public Response intercept(@NonNull Chain chain) throws IOException {
                 Request newRequest = chain.request().newBuilder()
                         .addHeader("Content-Type", "application/json")
-                        .addHeader("Authorization","Bearer "+TOKEN)
+                        .addHeader("Authorization", "Bearer " + TOKEN)
                         .build();
                 return chain.proceed(newRequest);
             }
         }).build();
 
-     //   client.interceptors().add(new HttpInterceptor());
 
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -49,7 +49,6 @@ public class RetrofitClient {
                 .client(client)
                 .build();
         apiCall = retrofit.create(RetrofitApiService.class);
-
     }
 
 

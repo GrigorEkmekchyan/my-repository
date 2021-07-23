@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <item android:title="@string/transactions">
+        <menu>
+            <item
+                android:id="@+id/nav_paid"
+                android:title="@string/paid" />
+            <item
+                android:id="@+id/nav_unpaid"
+                android:title="@string/unpaid" />
+            <item
+                android:id="@+id/nav_reversed"
+                android:title="@string/reversed" />
+        </menu>
+    </item>
+    <item android:title="@string/languages">
+        <menu>
+            <item
+                android:id="@+id/nav_armenia"
+                android:title="@string/armenian" />
+            <item
+                android:id="@+id/nav_russia"
+                android:title="@string/russian" />
+
+            <item
+                android:id="@+id/nav_usa"
+                android:title="@string/usa" />
+        </menu>
+    </item>
+
+    <item android:title="@string/other">
+        <menu>
+            <item
+                android:id="@+id/nav_help"
+                android:title="@string/help" />
+            <item
+                android:id="@+id/nav_logout"
+                android:title="@string/log_out" />
+
+
+        </menu>
+    </item>
+</menu>
+

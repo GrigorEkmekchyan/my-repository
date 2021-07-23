@@ -2,6 +2,7 @@ package com.example.merchantx.retrofit.manager;
 
 import androidx.annotation.NonNull;
 
+import com.example.merchantx.base.Constants;
 import com.example.merchantx.retrofit.bady.LoginBody;
 import com.example.merchantx.retrofit.response.LoginResponse;
 import com.example.merchantx.servises.RetrofitClient;
@@ -21,6 +22,7 @@ public class LoginManager {
             public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
 
                 if (response.isSuccessful()) {
+                    Constants.TOKEN = response.headers().get("token");
                     onLoginSearchListener.onLoginSearchSuccess(response.body());
 
                 } else onLoginSearchListener.onLoginSearchFail(response.message());

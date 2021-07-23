@@ -6,10 +6,13 @@ import com.example.merchantx.retrofit.bady.LoginBody;
 import com.example.merchantx.retrofit.bady.SendSmsBody;
 import com.example.merchantx.retrofit.response.GenerateQRResponse;
 import com.example.merchantx.retrofit.response.GetTransactionNotPaidResponse;
-import com.example.merchantx.retrofit.response.GetTransactionOnlyPaidResponse;
+import com.example.merchantx.retrofit.response.get_paid_response.GetTransactionsResponse;
 import com.example.merchantx.retrofit.response.GetTransactionReversedResponse;
 import com.example.merchantx.retrofit.response.LoginResponse;
 import com.example.merchantx.retrofit.response.SendSmsResponse;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -28,15 +31,15 @@ public interface RetrofitApiService {
             @Body() SendSmsBody sendSmsBody);
 
     @GET("api/Payment/GetTransactionsOnlyPaid")
-    Call<GetTransactionOnlyPaidResponse> getTransactionOnlyPaidCall(
+    Call<List<GetTransactionsResponse>> getTransactionOnlyPaidCall(
             @Query("id") Integer id);
 
     @GET("api/Payment/GetTransactionsNotPaid")
-    Call<GetTransactionNotPaidResponse> getTransactionNotPaidCall(
+    Call<List<GetTransactionsResponse>> getTransactionNotPaidCall(
             @Query("id") Integer id);
 
     @GET("api/Payment/GetTransactionsReversed")
-    Call<GetTransactionReversedResponse> getTransactionReversedCall(
+    Call<List<GetTransactionsResponse>> getTransactionReversedCall(
             @Query("id") Integer id);
 
     @POST("api/Qr/GenerateQR")

@@ -3,13 +3,14 @@ package com.example.merchantx.repository;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.merchantx.retrofit.manager.GetTransactionNotPaidManager;
-import com.example.merchantx.retrofit.manager.GetTransactionOnlyPaidManager;
 import com.example.merchantx.retrofit.response.GetTransactionNotPaidResponse;
-import com.example.merchantx.retrofit.response.GetTransactionOnlyPaidResponse;
+import com.example.merchantx.retrofit.response.get_paid_response.GetTransactionsResponse;
+
+import java.util.List;
 
 
 public class GetTransactionNotPaidRepository implements GetTransactionNotPaidManager.OnGetTransactionNotPaidSearchListener {
-    private MutableLiveData<GetTransactionNotPaidResponse> liveData = new MutableLiveData();
+    private MutableLiveData<List<GetTransactionsResponse>> liveData = new MutableLiveData();
     private MutableLiveData<String> failLiveData = new MutableLiveData<>();
     private MutableLiveData<String> errorLiveData = new MutableLiveData<>();
 
@@ -18,7 +19,7 @@ public class GetTransactionNotPaidRepository implements GetTransactionNotPaidMan
     }
 
     @Override
-    public void onGetTransactionNotPaidSearchSuccess(GetTransactionNotPaidResponse getTransactionNotPaidResponse) {
+    public void onGetTransactionNotPaidSearchSuccess(List<GetTransactionsResponse> getTransactionNotPaidResponse) {
         liveData.setValue(getTransactionNotPaidResponse);
     }
 
@@ -32,7 +33,7 @@ public class GetTransactionNotPaidRepository implements GetTransactionNotPaidMan
 
     }
 
-    public MutableLiveData<GetTransactionNotPaidResponse> getLiveData() {
+    public MutableLiveData<List<GetTransactionsResponse>> getLiveData() {
         return liveData;
     }
 

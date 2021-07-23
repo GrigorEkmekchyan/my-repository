@@ -12,7 +12,7 @@ public class LoginResponse {
     private String merchantUserId;
     @SerializedName("merchants")
     @Expose
-    private List<Object> merchants = null;
+    private List<Merchant> merchants = null;
     @SerializedName("canReverse")
     @Expose
     private Boolean canReverse;
@@ -34,11 +34,11 @@ public class LoginResponse {
         this.merchantUserId = merchantUserId;
     }
 
-    public List<Object> getMerchants() {
+    public List<Merchant> getMerchants() {
         return merchants;
     }
 
-    public void setMerchants(List<Object> merchants) {
+    public void setMerchants(List<Merchant> merchants) {
         this.merchants = merchants;
     }
 

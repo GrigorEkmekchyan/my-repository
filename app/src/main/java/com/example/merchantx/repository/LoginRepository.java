@@ -12,7 +12,7 @@ public class LoginRepository implements LoginManager.OnLoginSearchListener {
     private MutableLiveData<String> failLiveData = new MutableLiveData<>();
     private MutableLiveData<String> errorLiveData = new MutableLiveData<>();
 
-    public void searchLoginCall(LoginBody loginBody){
+    public void searchLoginCall(LoginBody loginBody) {
         LoginManager.searchLoginManager(this, loginBody);
     }
 
@@ -22,12 +22,13 @@ public class LoginRepository implements LoginManager.OnLoginSearchListener {
     }
 
     @Override
-    public void onLoginSearchFail (String failMassage) {
-       failLiveData.setValue(failMassage);
+    public void onLoginSearchFail(String failMassage) {
+        failLiveData.setValue(failMassage);
     }
 
     @Override
     public void onLoginSearchError(String errorMassage) {
+        errorLiveData.setValue(errorMassage);
 
     }
 

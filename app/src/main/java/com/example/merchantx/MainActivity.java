@@ -65,37 +65,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         if (!USER_ID.equals("")) {
-            getLoader();
-            LoginViewModel loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
-            LoginBody loginBody = new LoginBody();
-            loginBody.setUsername(LOGIN);
-            loginBody.setPassword(PASSWORD);
-            loginViewModel.searchLogin(loginBody);
-            loginViewModel.getLoginResponseMutableLiveData().observe(this, new Observer<LoginResponse>() {
-                @Override
-                public void onChanged(LoginResponse loginResponse) {
-                    clearFragmentBackStack();
-                    Constants.MERCHANT_ID = loginResponse.getMerchants().get(0).getId();
-                    USER_ID = loginResponse.getMerchantUserId();
-                    addFragment(new MainFragment(), R.id.fl_fragment_container, getSupportFragmentManager());
-                    closeLoader();
-                }
-            });
-
-            loginViewModel.getFailLiveData().observe(this, new Observer<String>() {
-                @Override
-                public void onChanged(String s) {
-                    closeLoader();
-                    Toast.makeText(MainActivity.this, "Fail", Toast.LENGTH_SHORT).show();
-                }
-            });
-            loginViewModel.getErrorLiveData().observe(this, new Observer<String>() {
-                @Override
-                public void onChanged(String s) {
-                    closeLoader();
-                    Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                }
-            });
+            innerLoginCall();
         } else {
             addFragment(new LoginFragment(), R.id.fl_fragment_container, getSupportFragmentManager());
         }
@@ -110,11 +80,53 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         toggle.syncState();
     }
 
+    private void innerLoginCall() {
+        getLoader();
+        LoginViewModel loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
+        LoginBody loginBody = new LoginBody();
+        loginBody.setUsername(LOGIN);
+        loginBody.setPassword(PASSWORD);
+        loginViewModel.searchLogin(loginBody);
+        loginViewModel.getLoginResponseMutableLiveData().observe(this, new Observer<LoginResponse>() {
+            @Override
+            public void onChanged(LoginResponse loginResponse) {
+                clearFragmentBackStack();
+                Constants.MERCHANT_ID = loginResponse.getMerchants().get(0).getId();
+                USER_ID = loginResponse.getMerchantUserId();
+                addFragment(new MainFragment(), R.id.fl_fragment_container, getSupportFragmentManager());
+                closeLoader();
+            }
+        });
+
+        loginViewModel.getFailLiveData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                closeLoader();
+                Toast.makeText(MainActivity.this, "Fail", Toast.LENGTH_SHORT).show();
+            }
+        });
+        loginViewModel.getErrorLiveData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                closeLoader();
+                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
+
+            case R.id.nav_merchant:
+                if (isLogin()) {
+                    clearFragmentBackStack();
+                    innerLoginCall();
+                }
+                break;
+
             case R.id.nav_paid:
                 if (isLogin())
                     changeFragment(R.id.fl_fragment_container, new PaidHistoryFragment());

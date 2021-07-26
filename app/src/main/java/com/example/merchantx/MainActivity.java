@@ -130,17 +130,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.nav_paid:
                 if (isLogin())
                     changeFragment(R.id.fl_fragment_container, new PaidHistoryFragment());
+                getLoader();
                 break;
 
             case R.id.nav_unpaid:
                 if (isLogin())
                     changeFragment(R.id.fl_fragment_container, new UnpaidHistoryFragment());
+                getLoader();
 
                 break;
 
             case R.id.nav_reversed:
                 if (isLogin())
                     changeFragment(R.id.fl_fragment_container, new ReversedHistoryFragment());
+                getLoader();
 
                 break;
             case R.id.nav_armenia:

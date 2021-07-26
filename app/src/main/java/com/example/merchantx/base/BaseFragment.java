@@ -13,7 +13,7 @@ import com.leo.simplearcloader.SimpleArcDialog;
 import com.leo.simplearcloader.SimpleArcLoader;
 
 public abstract class BaseFragment extends Fragment {
-    private SimpleArcDialog mDialog;
+    private  SimpleArcDialog mDialog;
 
     public FragmentTransaction addFragment(Fragment fragment, int frameId, FragmentManager myFragmentManager) {
         FragmentTransaction fragmentTransaction = myFragmentManager.beginTransaction();

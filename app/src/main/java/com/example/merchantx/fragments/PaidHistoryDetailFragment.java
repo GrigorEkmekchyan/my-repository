@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.merchantx.R;
 import com.example.merchantx.base.BaseFragment;
@@ -17,6 +18,7 @@ import java.util.List;
 public class PaidHistoryDetailFragment extends BaseFragment {
 
 private GetTransactionsResponse  getTransactionsResponses;
+private TextView tvName;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
